@@ -59,7 +59,6 @@ contract LocalCoinSwapTrc20Escrow {
     bytes32 _s
   ) external payable {
     require(!escrows[_tradeHash].exists, "Escrow already exists");
-    // Need to trade atleast 2 TRX
     require(_value > 1000, "Escrow value too small");
 
     bytes32 _invitationHash = keccak256(abi.encodePacked(_tradeHash));
@@ -251,7 +250,9 @@ contract LocalCoinSwapTrc20Escrow {
     bytes32 _r,
     bytes32 _s
   ) private pure returns (address) {
-    return ecrecover(_h, _v, _r, _s);
+    bytes memory _prefix = "\x19Ethereum Signed Message:\n32";
+    bytes32 _prefixedHash = keccak256(abi.encodePacked(_prefix, _h));
+    return ecrecover(_prefixedHash, _v, _r, _s);
   }
 
   /// @notice Withdraw fees collected by the contract. Only the owner can call this.
