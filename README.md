@@ -4,7 +4,7 @@ Escrow smart contract to allow trading TRC20 tokens like USDT, USDC, on TRON net
 
 ## What it does?
 
-It allows a seller of TRC20 to safely place their tokens into Escrow and give them ability to release it to the buyer. 
+It allows a seller to safely place their tokens into Escrow and give them ability to release it to the buyer. The contract can also handle cancellation and disputes on chain.
 
 ## Production
 
