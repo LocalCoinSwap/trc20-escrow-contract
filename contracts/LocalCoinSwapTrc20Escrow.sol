@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./SafeTRC20.sol";
 import "./ITRC20.sol";
 
 contract LocalCoinSwapTrc20Escrow {
-  using SafeTRC20 for ITRC20;
 
   address public arbitrator;
   address public owner;
@@ -67,7 +65,7 @@ contract LocalCoinSwapTrc20Escrow {
       "Signature not from relayer"
     );
 
-    ITRC20(_tokenAddress).safeTransferFrom(msg.sender, address(this), _value);
+    ITRC20(_tokenAddress).transferFrom(msg.sender, address(this), _value);
 
     escrows[_tradeHash] = Escrow(true, _tokenAddress);
     emit Created(_tradeHash);
@@ -215,7 +213,7 @@ contract LocalCoinSwapTrc20Escrow {
     require(_value > _fee, "Fee more than value");
     uint256 _takerAmount = _value - _fee;
     collectedFees[_tokenAddress] += _fee;
-    ITRC20(_tokenAddress).safeTransfer(_to, _takerAmount);
+    ITRC20(_tokenAddress).transfer(_to, _takerAmount);
   }
 
   function getRelayedSender(
@@ -265,7 +263,7 @@ contract LocalCoinSwapTrc20Escrow {
     // This check also prevents underflow
     require(_amount <= collectedFees[_tokenAddress], "Amount is higher than amount available");
     collectedFees[_tokenAddress] -= _amount;
-    ITRC20(_tokenAddress).safeTransfer(_to, _amount);
+    ITRC20(_tokenAddress).transfer(_to, _amount);
   }
 
   function sweepFees(address _tokenAddress, uint256 _amount)
@@ -274,7 +272,7 @@ contract LocalCoinSwapTrc20Escrow {
   {
     require(_amount <= collectedFees[_tokenAddress], "Amount is higher than amount available");
     collectedFees[_tokenAddress] -= _amount;
-    ITRC20(_tokenAddress).safeTransfer(withdrawTo, _amount);
+    ITRC20(_tokenAddress).transfer(withdrawTo, _amount);
   }
 
   /***********************
